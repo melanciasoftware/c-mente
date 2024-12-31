@@ -1,4 +1,4 @@
-#include "nn.h";
+#include "nn.h"
 
 nn_node nn_create_node (unsigned int output_layer_count)
 {
@@ -40,4 +40,36 @@ nn_network nn_create_network (unsigned int layer_count, unsigned int* layer_node
         network.layers[i] = nn_create_layer(layer_node_counts[i], next_layer_count);
     }
     return network;
+}
+
+void nn_destroy_node (nn_node* node)
+{
+    free(node->weights);
+    node->weights = NULL;
+    node->weight_count = 0;
+    node->output = 0.0;
+    node->bias = 0.0;
+    node->gradient = 0.0;
+}
+
+void nn_destroy_layer (nn_layer* layer)
+{
+    for (unsigned int i = 0; i < layer->node_count; i++)
+    {
+        nn_destroy_node(&layer->nodes[i]);
+    }
+    free(layer->nodes);
+    layer->nodes = NULL;
+    layer->node_count = 0;
+}
+
+void nn_destroy_network (nn_network* network)
+{
+    for (unsigned int i = 0; i < network->layer_count; i++)
+    {
+        nn_destroy_layer(&network->layers[i]);
+    }
+    free(network->layers);
+    network->layers = NULL;
+    network->layer_count = 0;
 }
