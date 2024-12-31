@@ -24,5 +24,7 @@ int main (void) {
         }
     }
 
+    nn_destroy_network(&network);
+
     return (0);
 }
